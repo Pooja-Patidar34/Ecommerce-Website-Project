@@ -1,0 +1,56 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mt-5">Checkout</h2>
+  
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Image</th>
+          <th scope="col">Product</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Price</th>
+          <th scope="col">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}
+        <tr>
+          <td>
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width: 60px; height: auto;">
+          </td>
+          <td>{{ item.product.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>Rs. {{ item.product.price }}</td>
+          <td>Rs. {{ item.get_total_price }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="table-secondary">
+          <td colspan="4" class="text-end"><strong>Total</strong></td>
+          <td><strong>Rs. {{ total }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<div class="text-center mt-4">
+  <form action="{% url 'payment_success' %}" method="POST">
+    {% csrf_token %}
+    <script 
+      src="https://checkout.razorpay.com/v1/checkout.js"
+      data-key="{{ razorpay_key }}"
+      data-amount="{{ razorpay_order.amount }}"
+      data-currency="INR"
+      data-order_id="{{ razorpay_order.id }}"
+      data-buttontext="Pay with Razorpay"
+      data-name="Ecommerce"
+      data-description="Order Payment"
+      data-theme.color="#06efd">
+    </script>
+    <input type="hidden" name="hidden">
+  </form>
+</div>
+</div>
+{% endblock content %}
