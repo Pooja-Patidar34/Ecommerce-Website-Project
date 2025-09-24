@@ -20,7 +20,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -30,8 +29,12 @@ INSTALLED_APPS = [
     'orders',
     'accounts',
     'cart',
-    'crispy_forms'
+    'crispy_forms',
+    'background_task',
+    'import_export',
+    'admin'
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,11 +71,15 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'Ecommerce_Db',  
+            'USER': 'root', 
+            'PASSWORD': 'Pooja@123', 
+            'HOST': 'localhost',  
+            'PORT': '3306',      
+        }
     }
-}
 
 
 # Password validation
@@ -102,13 +109,16 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
+
 STATIC_URL = 'static/'
-STATICFILES_DIRS=[
-          BASE_DIR,'static'
-]
+
+STATIC_ROOT = BASE_DIR / "static"
+
+# STATICFILES_DIRS=[
+#           BASE_DIR,'static'
+# ]
 MEDIA_URL='media/'
 MEDIA_ROOT=BASE_DIR/'media'
 
@@ -124,7 +134,7 @@ RAZORPAY_KEY_SECRET ="N3M8qOqS7GbKFqi4DaJ2Fmxh"
 #EMAIL SETTING
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST="smtp.gmail.com"
-PORT="587"
+PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER="pooja.chsr85@gmail.com"
 EMAIL_HOST_PASSWORD="Pooja@123"

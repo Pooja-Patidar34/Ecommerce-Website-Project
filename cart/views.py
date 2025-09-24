@@ -19,7 +19,6 @@ def view_cart(request):
         total=sum([item.get_total_price() for item in items])
         return render(request,'cart/view_cart.html',{'cart_items':items,'total':total})
 
-
 @login_required
 def remove_from_cart(request,product_id):
      product=get_object_or_404(Product,id=product_id)
@@ -45,5 +44,4 @@ def update_cart_quantity(request, item_id, action):
             item.save()
         else:
             item.delete()
-
     return redirect('view_cart')

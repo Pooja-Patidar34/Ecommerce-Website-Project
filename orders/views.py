@@ -13,8 +13,8 @@ client=razorpay.Client(auth=(settings.RAZORPAY_KEY_ID,settings.RAZORPAY_KEY_SECR
 
 @login_required
 def checkout_view(request):
-    user = request.user
-    cart_items = CartItem.objects.filter(user=user)                            
+    user = request. user
+    cart_items = CartItem.objects.filter(user=user)                           
 
     total = sum(item.get_total_price() for item in cart_items)
     total_paise = int(total * 100)
@@ -40,6 +40,7 @@ def place_order(request):
                   return redirect('product_list')
           
           total_amount=sum(item.get_total_price()for item in cart_items)
+          print(total_amount)
           total_amount_paise=int(total_amount*100)
 
           razorpay_order=client.order.create({
@@ -86,14 +87,13 @@ def payment_success(request):
             razorpay_order_id=order_id, 
             razorpay_payment_id=payment_id
         )
-
+        
         for item in cart_items:
             if item.product.stock < item.quantity:
                 return render(request,'cart/view_cart.html',{'error':'Insufficient Stock'})
             OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
             item.product.stock -= item.quantity
             item.product.save()
-
         cart_items.delete()
 
         return redirect("order_history")

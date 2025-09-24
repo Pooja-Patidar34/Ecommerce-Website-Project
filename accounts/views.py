@@ -1,54 +1,60 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate,login,logout,get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
-from django.http import JsonResponse
+
+User = get_user_model()
+
 def login_page(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        if not User.objects.filter(username=username).exists():
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'error': 'Invalid Username'}, status=400)
-            messages.error(request, 'Invalid Username')
-            return redirect('/login/')
-        user = authenticate(request, username=username, password=password)
-        if user is None:
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'error': 'Invalid Password'}, status=400)
-            messages.error(request, 'Invalid Password')
-            return redirect('/login/')
+        try:
+            # Check if user exists in DB
+            user_obj = User.objects.get(username=username)
+            
+            if not user_obj.is_active:
+                messages.error(request, 'You are Blocked')
+                return render(request, 'accounts/login.html')
+        except User.DoesNotExist:
+            user_obj = None
 
-        login(request, user)
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return JsonResponse({'redirect_url': '/'})
-        return redirect('/')
+        # Authenticate only if user is not blocked
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            login(request, user)
+            return redirect('product_list')
+        else:
+            messages.error(request, 'Invalid username or password')
 
     return render(request, 'accounts/login.html')
 
-                        
 def register_page(request):
           if request.method=='POST':
                 first_name=request.POST.get('first_name')
                 last_name=request.POST.get('last_name')
+                email=request.POST.get('email')
                 username=request.POST.get('username')
                 password=request.POST.get('password')
+
                 user=User.objects.filter(username=username)
                 if user.exists():
-                        messages.info(request,'Username Already Taken!!!')
-                        return redirect('/register/')
+                        messages.error(request,'Username Already Taken!!!')
+                        return redirect('register_page')
                 user=User.objects.create_user(
                         first_name=first_name,
                         last_name=last_name,
-                        username=username
+                        email=email,
+                        username=username,
                 )
                 user.set_password(password)
                 user.save()
                 messages.info(request,'Account Created Successfully')
-                return redirect('/register/')
+                return redirect('register_page')
           return render(request,'accounts/register.html')
 
 @login_required

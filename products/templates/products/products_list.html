@@ -18,7 +18,10 @@
             <div class="sticky-sidebar">
                 <h4 class="">Categories</h4>
                 <ul class="list-group">
-                    <li class="list-group-item {% if not current_category %}active{% endif %}">
+                    <li class="list-group-item 
+                    {% if not current_category %}
+                    active
+                    {% endif %}">
                         <a href="{% url 'product_list' %}" class="{% if not current_category %}text-white{% endif %}">
                             All
                         </a>
