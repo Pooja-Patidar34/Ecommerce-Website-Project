@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="alert alert-danger mt-5 p-4 text-center">
+    <h3>🚫 Access Denied</h3>
+    <p>You are not authorized to access this page.</p>
+    {% if module %}
+    <p><strong>Module:</strong> {{ module }}</p>
+    {% endif %}
+    <a href="/admin/admindashboard/" class="btn btn-primary mt-3">Back to Dashboard</a>
+</div>
+{% endblock %}

@@ -1,12 +1,87 @@
 {% extends "admin/base.html" %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Document</title>
-</head>
-<body>
-          
-</body>
-</html>
+{% load perm_tags %}
+{% block content %}
+<div class="card p-3 mb-3">
+  <h5>Welcome, {{ request.user.username }}</h5>
+  <p>Role: 
+  <strong>
+    {% if role_user %}
+      {{ role_user.role.rname }}
+    {% else %}
+      No Role Assigned
+    {% endif %}
+  </strong>
+</p>
+
+
+  <p>Your quick permissions:</p>
+  <ul>
+
+    <!-- ✅ PRODUCTS -->
+    <li><strong>Products:</strong>
+      {% has_perm module="products" action="any" as products_access %}
+      {% if products_access %}<span class="badge bg-success">Access</span>
+      {% else %}<span class="badge bg-danger">No Access</span>{% endif %}
+      (
+      View: {% has_perm module="products" action="view" as p_view %}{% if p_view %}✔{% else %}✖{% endif %},
+      Create: {% has_perm module="products" action="create" as p_create %}{% if p_create %}✔{% else %}✖{% endif %},
+      Edit: {% has_perm module="products" action="edit" as p_edit %}{% if p_edit %}✔{% else %}✖{% endif %},
+      Delete: {% has_perm module="products" action="delete" as p_delete %}{% if p_delete %}✔{% else %}✖{% endif %}
+      )
+    </li>
+
+    <!-- 🛒 CARTS -->
+    <li><strong>Carts:</strong>
+      {% has_perm module="carts" action="any" as cart_access %}
+      {% if cart_access %}<span class="badge bg-success">Access</span>
+      {% else %}<span class="badge bg-danger">No Access</span>{% endif %}
+      (
+      View: {% has_perm module="carts" action="view" as c_view %}{% if c_view %}✔{% else %}✖{% endif %},
+      Add: {% has_perm module="carts" action="create" as c_create %}{% if c_create %}✔{% else %}✖{% endif %},
+      Update: {% has_perm module="carts" action="edit" as c_edit %}{% if c_edit %}✔{% else %}✖{% endif %},
+      Remove: {% has_perm module="carts" action="delete" as c_delete %}{% if c_delete %}✔{% else %}✖{% endif %}
+      )
+    </li>
+
+    <!-- 📦 ORDERS -->
+    <li><strong>Orders:</strong>
+      {% has_perm module="orders" action="any" as order_access %}
+      {% if order_access %}<span class="badge bg-success">Access</span>
+      {% else %}<span class="badge bg-danger">No Access</span>{% endif %}
+      (
+      View: {% has_perm module="orders" action="view" as o_view %}{% if o_view %}✔{% else %}✖{% endif %},
+      Add: {% has_perm module="orders" action="create" as o_create %}{% if o_create %}✔{% else %}✖{% endif %},
+      Update: {% has_perm module="orders" action="edit" as o_edit %}{% if o_edit %}✔{% else %}✖{% endif %},
+      Delete: {% has_perm module="orders" action="delete" as o_delete %}{% if o_delete %}✔{% else %}✖{% endif %}
+      )
+    </li>
+
+    <!-- 🏷️ CATEGORIES -->
+    <li><strong>Categories:</strong>
+      {% has_perm module="categories" action="any" as cat_access %}
+      {% if cat_access %}<span class="badge bg-success">Access</span>
+      {% else %}<span class="badge bg-danger">No Access</span>{% endif %}
+      (
+      View: {% has_perm module="categories" action="view" as cat_view %}{% if cat_view %}✔{% else %}✖{% endif %},
+      Add: {% has_perm module="categories" action="create" as cat_create %}{% if cat_create %}✔{% else %}✖{% endif %},
+      Update: {% has_perm module="categories" action="edit" as cat_edit %}{% if cat_edit %}✔{% else %}✖{% endif %},
+      Delete: {% has_perm module="categories" action="delete" as cat_delete %}{% if cat_delete %}✔{% else %}✖{% endif %}
+      )
+    </li>
+
+    <!-- 👥 USER MANAGEMENT -->
+    <li><strong>User Management:</strong>
+      {% has_perm module="users" action="any" as user_access %}
+      {% if user_access %}<span class="badge bg-success">Access</span>
+      {% else %}<span class="badge bg-danger">No Access</span>{% endif %}
+      (
+      View: {% has_perm module="users" action="view" as u_view %}{% if u_view %}✔{% else %}✖{% endif %},
+      Add: {% has_perm module="users" action="create" as u_create %}{% if u_create %}✔{% else %}✖{% endif %},
+      Update: {% has_perm module="users" action="edit" as u_edit %}{% if u_edit %}✔{% else %}✖{% endif %},
+      Delete: {% has_perm module="users" action="delete" as u_delete %}{% if u_delete %}✔{% else %}✖{% endif %}
+      )
+    </li>
+
+  </ul>
+</div>
+{% endblock content %}

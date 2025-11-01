@@ -3,15 +3,26 @@ from cart.models import CartItem
 from products.models import Product
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.contrib import messages
 
 @login_required
+
 def add_to_cart(request, product_id):
-    product = Product.objects.get(id=product_id)
-    cart_item, created = CartItem.objects.get_or_create(user=request.user, product=product)
+    product = get_object_or_404(Product, id=product_id)
+
+    if product.stock <= 0:
+        messages.error(request, "This product is out of stock.")
+        return redirect("product_list") 
+
+    cart_item, created = CartItem.objects.get_or_create(
+        user=request.user, product=product
+    )
     if not created:
         cart_item.quantity += 1
-        cart_item.save()
-    return redirect('product_list')
+    cart_item.save()
+
+    messages.success(request, f"{product.name} added to your cart.")
+    return redirect("view_cart")
 
 @login_required
 def view_cart(request):

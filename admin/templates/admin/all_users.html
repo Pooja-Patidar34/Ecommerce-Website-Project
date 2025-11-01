@@ -1,16 +1,14 @@
 {% extends "admin/base.html" %}
 {% load static %}
-
 {% block content %}
 <div class="content-wrapper">
   <!-- Page header -->
-
-
   <!-- Main content -->
   <section class="content">
     <div class="card">
       <div class="card-header bg-primary text-white">
         <h3 class="card-title">All Users List</h3>
+        <h3><a class="btn btn-primary" href="{% url 'create_user' %}">Create user</a></h3>
 
       </div>
       <div class="card-body table-responsive">
@@ -40,9 +38,9 @@
             <tr>
               <td>{{ u.id }}</td>
               {% if u.first_name %}
-                <td>{{ u.first_name }}</td>
+              <td>{{ u.first_name }}</td>
               {% else %}
-                <td>-</td>
+              <td>-</td>
               {% endif %}
               {% if u.last_name %}
               <td>{{u.last_name}}</td>
@@ -50,11 +48,11 @@
               <td>-</td>
               {% endif %}
               {% if u.email %}
-                <td>{{ u.email }}</td>
+              <td>{{ u.email }}</td>
               {% else %}
-                <td>-</td>
+              <td>-</td>
               {% endif %}
-            
+
               <td>{{ u.username }}</td>
               <td>
                 <div class="dropdown">
@@ -63,7 +61,7 @@
                     Actions
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="actionMenu{{ u.id }}">
-                    <li><a class="dropdown-item" href="#">✏️ Edit</a></li>
+                    <li><a class="dropdown-item" href="{% url 'edit_user' u.id %}">✏️ Edit</a></li>
                     {% if u.is_active %}
                     <li>
                       <a href="#" class="dropdown-item text-warning" data-bs-toggle="modal"
@@ -87,8 +85,8 @@
             </tr>
             {% endfor %}
           </tbody>
-       </table>
-       <!-- Reusable Modal (only one, outside the loop) -->
+        </table>
+        <!-- Reusable Modal (only one, outside the loop) -->
         <div class="modal fade" id="confirmActionModal" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -104,7 +102,7 @@
             </div>
           </div>
         </div>
-         </div>
+      </div>
     </div>
   </section>
 </div>
@@ -144,5 +142,5 @@
       confirmBtn.setAttribute('href', url);
     });
   });
-</script> 
+</script>
 {% endblock %}

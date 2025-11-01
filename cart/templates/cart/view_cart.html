@@ -2,11 +2,10 @@
 {% load static %}
 {% block content %}
 <div class="container mt-5">
-  <h2 class=" mt-3">My Cart</h2>
+  <h2 class="mt-3">My Cart</h2>
   {% if cart_items %}
   <table class="table table-bordered table-hover mt-4 align-middle text-center">
     <thead class="table-dark">
-
       <tr>
         <th>Image</th>
         <th>Product</th>
@@ -15,7 +14,6 @@
         <th>Subtotal</th>
         <th>Action</th>
       </tr>
-
     </thead>
     <tbody>
       {% for item in cart_items %}
@@ -27,21 +25,23 @@
         <td>Rs {{ item.product.price }}</td>
         <td>
           <div class="input-group">
-            <form action="{% url 'update_cart_quantity' item.id 'decrease' %}" style="display: inline;">
+            <form action="{% url 'update_cart_quantity' item.id 'decrease' %}" method="POST" style="display: inline;">
               {% csrf_token %}
               <button type="submit" class="btn btn-outline-secondary">-</button>
             </form>
-            <input type="text" class="form-control text-center" value="{{item.quantity}}" readonly
+            <input type="text" class="form-control text-center" value="{{ item.quantity }}" readonly
               style="max-width: 60px;">
-            <form action="{% url 'update_cart_quantity' item.id 'increase' %}" style="display: inline;">
+            <form action="{% url 'update_cart_quantity' item.id 'increase' %}" method="POST" style="display: inline;">
               {% csrf_token %}
-              <button class="btn btn-outline-secondary" type="submit">+</button>
+              <button type="submit" class="btn btn-outline-secondary">+</button>
             </form>
           </div>
         </td>
         <td>Rs {{ item.get_total_price }}</td>
-        <td><a href="{% url 'remove_from_cart' item.product_id %}" class="btn btn-danger btn-sm"
-            onclick="return confirm('Are you sure you want to remove this item')">Remove</a> </td>
+        <td>
+          <a href="{% url 'remove_from_cart' item.product_id %}" class="btn btn-danger btn-sm"
+            onclick="return confirm('Are you sure you want to remove this item?')">Remove</a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -51,9 +51,8 @@
         <td><strong>Rs {{ total }}</strong></td>
       </tr>
     </tfoot>
-    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   </table>
-    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
   <div class="text-end">
     <a href="{% url 'checkout' %}" class="btn btn-success">Place Order</a>
   </div>

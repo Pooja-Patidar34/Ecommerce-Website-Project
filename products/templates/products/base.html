@@ -31,8 +31,8 @@
             <a class="nav-link" href="{% url 'view_cart' %}">Cart <span class="badge bg-danger"
                 id="cart-counter">{{cart_item_count}}</span></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'checkout' %}">Checkout</a>
+          <li class="nav-item"> 
+            <a href="{% url 'checkout'%}" class="nav-link">Checkout</a>
           </li>
           <li class="nav-item">
             <a href="{% url 'order_history' %}" class="nav-link">Order History</a>

@@ -11,26 +11,21 @@ def login_page(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         try:
             # Check if user exists in DB
             user_obj = User.objects.get(username=username)
-            
             if not user_obj.is_active:
                 messages.error(request, 'You are Blocked')
                 return render(request, 'accounts/login.html')
         except User.DoesNotExist:
             user_obj = None
-
         # Authenticate only if user is not blocked
         user = authenticate(request, username=username, password=password)
-
         if user:
             login(request, user)
             return redirect('product_list')
         else:
             messages.error(request, 'Invalid username or password')
-
     return render(request, 'accounts/login.html')
 
 def register_page(request):

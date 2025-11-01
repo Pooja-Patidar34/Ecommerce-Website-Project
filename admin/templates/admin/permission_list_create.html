@@ -1,0 +1,88 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Add Permission -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="m-0">Add Permission</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Permission Type</label>
+                            <select name="type" id="typeSelect" class="form-select" required>
+                                <option value="">-- Select Type --</option>
+                                <option value="module">Module</option>
+                                <option value="path">Path</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="moduleField" style="display:none;">
+                            <label class="form-label fw-bold">Module Name</label>
+                            <input type="text" name="module" class="form-control" placeholder="Enter Module Name">
+                        </div>
+                        <div class="mb-3" id="pathField" style="display:none;">
+                            <label class="form-label fw-bold">Path</label>
+                            <input type="text" name="path" class="form-control" placeholder="/admin/users">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Add Permission</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- List Permissions -->
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="m-0">Permission Module/Path List</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-bordered table-striped mb-0">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>#</th>
+                                <th>Type</th>
+                                <th>Module / Path</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for perm in permissions %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ perm.type }}</td>
+                                    <td>
+                                        {% if perm.type == "module" %}
+                                            <span class="badge bg-info">{{ perm.module }}</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">{{ perm.path }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ perm.created_at }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-danger">No Permissions Added Yet</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT: Show/Hide inputs based on type -->
+<script>
+document.getElementById("typeSelect").addEventListener("change", function () {
+    const type = this.value;
+    document.getElementById("moduleField").style.display = type === "module" ? "block" : "none";
+    document.getElementById("pathField").style.display = type === "path" ? "block" : "none";
+});
+</script>
+
+{% endblock %}

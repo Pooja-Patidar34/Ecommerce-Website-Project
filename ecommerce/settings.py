@@ -4,6 +4,45 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/django.log"),
+            "formatter": "verbose",
+        },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file", "console"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "payments": {
+            "handlers": ["file", "console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+    },
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -14,8 +53,7 @@ SECRET_KEY = 'django-insecure-#zn#kgec=1jm$z-$!6b^=fh_x&5ug!o=g0jat80bd6(k@@q5&r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '15fbc07d954e.ngrok-free.app']
 
 # Application definition
 
@@ -26,16 +64,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'products',
-    'orders',
     'accounts',
     'cart',
     'crispy_forms',
     'background_task',
     'import_export',
-    'admin'
+    'admin.apps.AdminConfig',
+    'order'
 ]
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -47,7 +83,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -65,7 +100,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -109,27 +143,31 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
-STATIC_ROOT = BASE_DIR / "static"
+# Where your own static files live (e.g., AdminLTE)
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
-# STATICFILES_DIRS=[
-#           BASE_DIR,'static'
-# ]
-MEDIA_URL='media/'
-MEDIA_ROOT=BASE_DIR/'media'
+# Where Django will collect static files for production
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-RAZORPAY_KEY_ID="rzp_test_erhQEfrLtBD7MG"
-RAZORPAY_KEY_SECRET ="N3M8qOqS7GbKFqi4DaJ2Fmxh"
 
+# Razorpay Api Keys
+RAZORPAY_KEY_ID="rzp_test_RM9ysFkXAhME0F"
+RAZORPAY_KEY_SECRET ="vV3LR7S9HIhZ8GOmrBs8ht4d"
+RAZORPAY_WEBHOOK_SECRET = "cfvghb45sxdfgcgt45"
 
 #EMAIL SETTING
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

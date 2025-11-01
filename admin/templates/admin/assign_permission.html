@@ -1,0 +1,96 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="m-0">Assign Permissions to Role</h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- SELECT ROLE -->
+            <form method="get" class="row mb-4">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Select Role</label>
+                    <select name="role" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Select Role --</option>
+                        {% for r in roles %}
+                        <option value="{{ r.id }}" {% if selected_role_id == r.id|stringformat:"s" %} selected {% endif %}>
+                            {{ r.rname }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+
+            {% if role %}
+            <!-- Sticky Role Header -->
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="role" value="{{ role.id }}">
+
+                <div class="d-flex justify-content-between align-items-center p-3 mb-3"
+                    style="background:#f0f8ff; border-left:5px solid #007bff; position:sticky; top:0; z-index:10;">
+                    <div>
+                        <h5 class="m-0 text-primary">
+                            Role: <span class="text-dark fw-bold">{{ role.rname }}</span>
+                        </h5>
+                        <small class="text-muted">Manage module & route level permissions</small>
+                    </div>
+                    <button type="submit" class="btn btn-success px-4">💾 Save Changes</button>
+                </div>
+
+                <!-- PERMISSION TABLE -->
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>Permission</th>
+                            <th>View</th>
+                            <th>Create</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for permission in permissions %}
+                        <tr>
+                            <td>
+                                {% if permission.type == "module" %}
+                                    <span class="badge bg-info px-3 py-2">{{ permission.module }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark px-3 py-2">{{ permission.path }}</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="text-center">
+                                <input type="checkbox" name="view_{{ permission.id }}"
+                                {% if permission.rp and permission.rp.has_view %}checked{% endif %}>
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" name="create_{{ permission.id }}"
+                                {% if permission.rp and permission.rp.has_create %}checked{% endif %}>
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" name="edit_{{ permission.id }}"
+                                {% if permission.rp and permission.rp.has_edit %}checked{% endif %}>
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" name="delete_{{ permission.id }}"
+                                {% if permission.rp and permission.rp.has_delete %}checked{% endif %}>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <button type="submit" class="btn btn-success w-100 py-2 mt-2">✅ Save Permissions</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,12 +1,41 @@
 {% extends "admin/base.html" %}
 {% block content %}
-<div class="container mt-4">
-    <h2>Edit Category</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{% url 'show_category' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+  
+<div class="container mt-5" style="max-width: 600px;">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-cente py-3">
+            <h3 class="mb-0">Edit Category</h3>
+        </div>
+        <div class="card-body p-4">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                </div>
+                <div class="flex justify-content-between mt-4">
+                    <a href="{% url 'show_category' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-4">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-{% endblock %}
+
+
+<style>
+    .card {
+        border-radius: 12px;
+    }
+    .form-group label {
+        font-weight: 600;
+    }
+    input, select, textarea {
+        border-radius: 8px !important;
+    }
+    .btn {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+</style>
+{% endblock content %}
