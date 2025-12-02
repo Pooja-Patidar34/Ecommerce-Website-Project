@@ -67,7 +67,6 @@ INSTALLED_APPS = [
     'accounts',
     'cart',
     'crispy_forms',
-    'background_task',
     'import_export',
     'admin.apps.AdminConfig',
     'order'
